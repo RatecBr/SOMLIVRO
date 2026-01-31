@@ -1,0 +1,190 @@
+{
+  "id": "102019c1016df1e70819b604019a6db752b",
+  "version": "102019c1016df1d7ee0998ab0539fadc107",
+  "schema": {
+    "name": "audiobook",
+    "description": "Stores audiobook metadata including title, cover image, and audio file information",
+    "fields": [
+      {
+        "name": "id",
+        "description": "Unique identifier for the audiobook",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Public identifier"
+        }
+      },
+      {
+        "name": "data_creator",
+        "description": "id of the user who creates the record",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 2,
+          "reason": "Internal audit trail"
+        }
+      },
+      {
+        "name": "data_updater",
+        "description": "id of the user who updates the record",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 2,
+          "reason": "Internal audit trail"
+        }
+      },
+      {
+        "name": "create_time",
+        "description": "create time in timestamp unix",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Public metadata"
+        },
+        "format": "timestamp"
+      },
+      {
+        "name": "update_time",
+        "description": "update time in timestamp unix",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Public metadata"
+        },
+        "format": "timestamp"
+      },
+      {
+        "name": "title",
+        "description": "Title of the audiobook",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Publicly accessible information"
+        }
+      },
+      {
+        "name": "cover_image_url",
+        "description": "URL for the audiobook cover image file",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Publicly accessible asset"
+        }
+      },
+      {
+        "name": "audio_file_url",
+        "description": "URL for the audiobook audio file",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Publicly accessible asset"
+        }
+      },
+      {
+        "name": "duration",
+        "description": "Duration string of the audiobook",
+        "type": 1,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Publicly accessible metadata"
+        },
+        "nullable": true
+      },
+      {
+        "name": "categories",
+        "description": "List of categories for the audiobook",
+        "type": 101,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Public classification"
+        },
+        "nullable": true,
+        "items": {
+          "name": "category",
+          "type": 100,
+          "enumeration": [
+            {
+              "value": "Unspecified"
+            }
+          ]
+        },
+        "maximum": 0,
+        "numeric": "int"
+      },
+      {
+        "name": "category",
+        "description": "Category value",
+        "type": 100,
+        "compliance": {
+          "confidentiality": 1,
+          "reason": "Public classification"
+        },
+        "enumeration": [
+          {
+            "value": "Unspecified"
+          },
+          {
+            "number": 1,
+            "value": "Ficcao"
+          },
+          {
+            "number": 2,
+            "value": "NaoFiccao"
+          },
+          {
+            "number": 3,
+            "value": "Literatura"
+          },
+          {
+            "number": 4,
+            "value": "Autoajuda"
+          },
+          {
+            "number": 5,
+            "value": "Empreendedorismo"
+          }
+        ]
+      }
+    ],
+    "indexes": [
+      {
+        "fields": [
+          "id"
+        ],
+        "unique": true,
+        "primary": true,
+        "order": false
+      },
+      {
+        "fields": [
+          "data_creator"
+        ],
+        "order": false
+      },
+      {
+        "fields": [
+          "data_updater"
+        ],
+        "order": false
+      },
+      {
+        "fields": [
+          "title"
+        ],
+        "order": true
+      }
+    ]
+  },
+  "task": {
+    "id": "697cf2d8b167adeb188fa61f",
+    "root": "697ce4c0b1b5b2f302cb9e32",
+    "project": "697ce4c0b1b5b2f302cb9e31",
+    "user": "c831b3c0-3081-7010-a859-560d6b649605"
+  },
+  "namespace": {
+    "id": "01987547fc6c72ecb453bd2736bd4ea0",
+    "tenant": 2,
+    "name": "global-1",
+    "default": true
+  },
+  "revision": 1
+}
