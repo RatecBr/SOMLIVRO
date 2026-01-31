@@ -32,7 +32,7 @@ export function HomepagePlaceholder() {
 						<div className="relative group">
 							{/* Outer glow rings */}
 							<div className="absolute inset-0 bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 dark:from-red-800 dark:via-orange-800 dark:to-yellow-800 rounded-full blur-3xl animate-pulse opacity-60" />
-							<div className="absolute inset-2 bg-gradient-to-r from-pink-300 to-purple-300 dark:from-pink-800 dark:to-purple-800 rounded-full blur-2xl animate-pulse delay-300 opacity-40" />
+							<div className="absolute inset-2 bg-gradient-to-r from-cyan-300 to-violet-300 dark:from-cyan-800 dark:to-violet-800 rounded-full blur-2xl animate-pulse delay-300 opacity-40" />
 
 							{/* Main icon container with enhanced styling */}
 							<div className="relative bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 dark:from-red-950 dark:via-orange-950 dark:to-yellow-950 p-12 rounded-full border-2 border-red-200/60 dark:border-red-800/60 shadow-2xl group-hover:shadow-red-500/25 dark:group-hover:shadow-red-400/25 transition-all duration-500 group-hover:scale-105">
@@ -40,7 +40,7 @@ export function HomepagePlaceholder() {
 								<AlertTriangle className="h-16 w-16 text-red-500 dark:text-red-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 relative z-10 drop-shadow-lg" />
 
 								{/* Floating mini icons */}
-								<div className="absolute -top-2 -right-2 p-1.5 bg-gradient-to-br from-orange-200 to-red-200 dark:from-orange-800 dark:to-red-800 rounded-full animate-bounce delay-200">
+								<div className="absolute -top-2 -right-2 p-1.5 bg-gradient-to-br from-indigo-200 to-cyan-200 dark:from-indigo-800 dark:to-cyan-800 rounded-full animate-bounce delay-200">
 									<Zap className="h-3 w-3 text-orange-600 dark:text-orange-400" />
 								</div>
 							</div>

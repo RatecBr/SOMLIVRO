@@ -80,13 +80,13 @@ export function AudiobookCatalog({ audiobooks, onSelect, selectedId }: Audiobook
 	return (
 		<div>
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-				<h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Biblioteca</h2>
+				<h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">Biblioteca</h2>
 				<button
 					onClick={() => setShowFilters(!showFilters)}
 					className={cn(
 						"flex items-center gap-2 px-3 py-2 rounded-xl border transition-all text-sm touch-manipulation shadow-sm",
 						showFilters || selectedFilters.length > 0
-							? "bg-gradient-to-r from-violet-50 to-fuchsia-50 border-violet-300 text-violet-700"
+							? "bg-gradient-to-r from-violet-50 via-indigo-50 to-cyan-50 border-violet-300 text-violet-700"
 							: "bg-white/80 backdrop-blur-sm border-gray-200 text-gray-700 hover:bg-white hover:shadow-md"
 					)}
 				>
@@ -182,7 +182,7 @@ export function AudiobookCatalog({ audiobooks, onSelect, selectedId }: Audiobook
 								)}
 							>
 								<CardHeader className="p-0">
-									<div className="relative aspect-square overflow-hidden rounded-t-lg bg-gradient-to-br from-violet-100 via-fuchsia-50 to-rose-100">
+									<div className="relative aspect-square overflow-hidden rounded-t-lg bg-gradient-to-br from-violet-100 via-indigo-50 to-cyan-100">
 										{audiobook.cover_image_url ? (
 											<img
 												src={audiobook.cover_image_url}

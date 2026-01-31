@@ -83,17 +83,17 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 			<Card className="w-full max-w-md bg-white/80 backdrop-blur-md border-gray-200/50 shadow-xl">
 				<CardHeader className="text-center px-4 sm:px-6">
 					<div className="flex justify-center mb-3 sm:mb-4">
-						<div className="p-2.5 sm:p-3 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-full">
+						<div className="p-2.5 sm:p-3 bg-gradient-to-br from-violet-100 via-indigo-100 to-cyan-100 rounded-full">
 							<Lock className="w-6 h-6 sm:w-8 sm:h-8 text-violet-600" />
 						</div>
 					</div>
-					<CardTitle className="text-xl sm:text-2xl bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">
+					<CardTitle className="text-xl sm:text-2xl bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">
 						{isCreatingAccount ? "Criar Novo Admin" : "Login Administrativo"}
 					</CardTitle>
 					<CardDescription className="text-sm">
 						{isCreatingAccount
-							? "Crie uma nova conta de administrador"
-							: "Informe suas credenciais para acessar o painel"}
+							? "Crie uma conta para acesso administrativo (exige permissão)."
+							: "Informe suas credenciais para acessar o painel. O email precisa estar em VITE_ADMIN_EMAILS."}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="px-4 sm:px-6">

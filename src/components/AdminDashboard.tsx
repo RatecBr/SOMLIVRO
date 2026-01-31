@@ -157,12 +157,12 @@ export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
 		<div className="space-y-4 sm:space-y-6">
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 				<div>
-					<h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Painel Administrativo</h2>
+					<h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">Painel Administrativo</h2>
 					<p className="text-sm sm:text-base text-gray-600 mt-1">Gerencie sua coleção de audiobooks</p>
 				</div>
 				<Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
 					<DialogTrigger asChild>
-						<Button size="default" className="w-full sm:w-auto touch-manipulation bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 shadow-lg shadow-violet-200">
+						<Button size="default" className="w-full sm:w-auto touch-manipulation bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-700 hover:via-indigo-700 hover:to-cyan-600 shadow-lg shadow-indigo-200">
 							<Plus className="w-5 h-5 mr-2" />
 							Adicionar Audiobook
 						</Button>
@@ -306,7 +306,7 @@ export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
 			{editingAudiobook && (
 				<Card className="border-violet-400 bg-white/80 backdrop-blur-sm shadow-lg">
 					<CardHeader>
-						<CardTitle className="bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Editar Audiobook</CardTitle>
+						<CardTitle className="bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">Editar Audiobook</CardTitle>
 						<CardDescription>Atualize as informações do audiobook</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -426,7 +426,7 @@ export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
 			)}
 
 			<div>
-				<h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Gerenciar Audiobooks ({audiobooks.length})</h3>
+				<h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">Gerenciar Audiobooks ({audiobooks.length})</h3>
 				{audiobooks.length === 0 ? (
 					<Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
 						<CardContent className="flex flex-col items-center justify-center py-8 sm:py-12">

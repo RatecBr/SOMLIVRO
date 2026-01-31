@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AudiobookPlatform } from "@/components/AudiobookPlatform";
+import { LandingPage } from "@/components/LandingPage";
 
 export const Route = createFileRoute("/")({
 	component: App,
 });
 
 function App() {
-	return <AudiobookPlatform />;
+	return <LandingPage />;
 }
