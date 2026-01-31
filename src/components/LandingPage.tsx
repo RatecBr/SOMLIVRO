@@ -74,10 +74,6 @@ export function LandingPage() {
 			<main className="container mx-auto px-3 sm:px-4 py-8 sm:py-12">
 				<section className="grid lg:grid-cols-2 gap-6 sm:gap-10 items-center">
 					<div>
-						<div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-3 py-1 rounded-full bg-white/70 backdrop-blur-sm border border-white/60 text-indigo-700">
-							<span className="h-2 w-2 rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400" />
-							Não pague nada para escutar
-						</div>
 						<h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
 							Sua biblioteca de audiobooks,{" "}
 							<span className="bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">

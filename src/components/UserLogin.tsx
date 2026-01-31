@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase/client";
+import { useSupabaseSession } from "@/lib/supabase/useSupabaseSession";
 
 export function UserLogin() {
 	const navigate = useNavigate();
@@ -16,6 +17,14 @@ export function UserLogin() {
 	const [success, setSuccess] = useState("");
 	const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 	const [isPending, setIsPending] = useState(false);
+	const { session, isReady } = useSupabaseSession();
+
+	useEffect(() => {
+		if (!isReady) return;
+		if (session) {
+			navigate({ to: "/biblioteca" });
+		}
+	}, [isReady, session, navigate]);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -36,7 +45,13 @@ export function UserLogin() {
 		setIsPending(true);
 		(async () => {
 			if (isCreatingAccount) {
-				const { data, error } = await supabase.auth.signUp({ email, password });
+				const { data, error } = await supabase.auth.signUp({
+					email,
+					password,
+					options: {
+						emailRedirectTo: `${window.location.origin}/entrar`,
+					},
+				});
 				if (error) throw error;
 				if (data.session) {
 					await navigate({ to: "/biblioteca" });
