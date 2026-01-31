@@ -20,14 +20,35 @@ export function AudiobookPlatform(props: { initialAdminMode?: boolean } = {}) {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const { session, isReady, configError } = useSupabaseSession();
-	const adminEmailsRaw = (import.meta.env.VITE_ADMIN_EMAILS as string | undefined) || "";
-	const adminEmailSet = adminEmailsRaw
-		.split(/[,\s]+/g)
-		.map((s) => s.trim().toLowerCase())
-		.filter(Boolean);
-	const isAdminUser = Boolean(session?.user?.email) && adminEmailSet.includes(session.user.email!.toLowerCase());
+	const supabase = getSupabaseClient();
+	const isSupabaseConfigured = Boolean(supabase);
+	const rootAdminEmail = "marx.jane.menezes@gmail.com";
+	const isRootCandidate = Boolean(session?.user?.email) && session!.user.email!.toLowerCase() === rootAdminEmail;
+
+	const { data: adminFlags, isLoading: isAdminFlagsLoading } = useQuery({
+		queryKey: ["adminFlags", session?.user?.id],
+		enabled: Boolean(session && supabase),
+		queryFn: async () => {
+			const supabaseClient = getSupabaseClient();
+			if (!supabaseClient) return { isAdmin: false, isRoot: false };
+
+			const { data: isAdmin, error: isAdminError } = await supabaseClient.rpc("is_admin");
+			if (isAdminError) {
+				return { isAdmin: isRootCandidate, isRoot: isRootCandidate };
+			}
+
+			const { data: isRoot, error: isRootError } = await supabaseClient.rpc("is_root_admin");
+			if (isRootError) {
+				return { isAdmin: Boolean(isAdmin), isRoot: isRootCandidate };
+			}
+
+			return { isAdmin: Boolean(isAdmin), isRoot: Boolean(isRoot) };
+		},
+	});
+
+	const isAdminUser = adminFlags?.isAdmin ?? isRootCandidate;
+	const isRootAdmin = adminFlags?.isRoot ?? isRootCandidate;
 	const isAdminAuthenticated = Boolean(session) && isAdminUser;
-	const isSupabaseConfigured = Boolean(getSupabaseClient());
 
 	// Fetch all audiobooks
 	const { data: audiobooks = [], isLoading, error } = useQuery({
@@ -286,12 +307,23 @@ export function AudiobookPlatform(props: { initialAdminMode?: boolean } = {}) {
 				}`}
 			>
 				{isAdminMode ? (
-					isAdminAuthenticated ? (
+					!session ? (
+						<AdminLogin onLogin={handleAdminLogin} />
+					) : isAdminFlagsLoading ? (
+						<div className="max-w-lg w-full bg-white/80 backdrop-blur-md border border-gray-200/50 shadow-xl rounded-xl p-5 mx-auto">
+							<div className="text-lg font-semibold text-gray-900">Verificando permissão...</div>
+							<div className="text-sm text-gray-700 mt-2">
+								Aguarde um momento.
+							</div>
+						</div>
+					) : isAdminAuthenticated ? (
 						<AdminDashboard
 							audiobooks={audiobooks}
 							onUpdate={handleAudiobookUpdate}
+							isRootAdmin={isRootAdmin}
+							rootAdminEmail={rootAdminEmail}
 						/>
-					) : session ? (
+					) : (
 						<div className="max-w-lg w-full bg-white/80 backdrop-blur-md border border-gray-200/50 shadow-xl rounded-xl p-5 mx-auto">
 							<div className="text-lg font-semibold text-gray-900">Acesso negado</div>
 							<div className="text-sm text-gray-700 mt-2">
@@ -316,8 +348,6 @@ export function AudiobookPlatform(props: { initialAdminMode?: boolean } = {}) {
 								</Button>
 							</div>
 						</div>
-					) : (
-						<AdminLogin onLogin={handleAdminLogin} />
 					)
 				) : (
 					<div className="space-y-4">

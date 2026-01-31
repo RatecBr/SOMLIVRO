@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Audiobook } from "@/domain/audiobook";
 import { AudiobookCategory } from "@/domain/audiobook";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,15 +13,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Pencil, Trash2, BookOpen } from "lucide-react";
 import { createAudiobook, deleteAudiobook, updateAudiobook } from "@/lib/supabase/audiobooks";
 import { AUDIOBOOK_CATEGORY_OPTIONS } from "@/domain/audiobookCategories";
+import { getSupabaseClient } from "@/lib/supabase/client";
 
 interface AdminDashboardProps {
 	audiobooks: Audiobook[];
 	onUpdate: () => void;
+	isRootAdmin?: boolean;
+	rootAdminEmail?: string;
 }
 
-export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
+export function AdminDashboard({ audiobooks, onUpdate, isRootAdmin, rootAdminEmail }: AdminDashboardProps) {
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 	const [editingAudiobook, setEditingAudiobook] = useState<Audiobook | null>(null);
+	const [adminEmail, setAdminEmail] = useState("");
 	const [formData, setFormData] = useState({
 		title: "",
 		author: "",
@@ -32,6 +36,58 @@ export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
 	});
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
+	const queryClient = useQueryClient();
+
+	const { data: adminUsers = [], error: adminUsersError } = useQuery({
+		queryKey: ["adminUsers"],
+		enabled: Boolean(isRootAdmin),
+		queryFn: async () => {
+			const supabase = getSupabaseClient();
+			if (!supabase) return [];
+			const { data, error } = await supabase
+				.from("admin_users")
+				.select("email, created_at")
+				.order("created_at", { ascending: false });
+			if (error) throw error;
+			return data ?? [];
+		},
+	});
+
+	const grantAdminMutation = useMutation({
+		mutationFn: async (email: string) => {
+			const supabase = getSupabaseClient();
+			if (!supabase) throw new Error("Supabase não configurado");
+			const normalized = email.trim().toLowerCase();
+			if (!normalized) throw new Error("Informe o email");
+			const { error } = await supabase.rpc("grant_admin", { email: normalized });
+			if (error) throw error;
+		},
+		onSuccess: () => {
+			setSuccess("Administrador adicionado com sucesso!");
+			setAdminEmail("");
+			queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+		},
+		onError: (err: Error) => {
+			setError(err.message);
+		},
+	});
+
+	const revokeAdminMutation = useMutation({
+		mutationFn: async (email: string) => {
+			const supabase = getSupabaseClient();
+			if (!supabase) throw new Error("Supabase não configurado");
+			const normalized = email.trim().toLowerCase();
+			const { error } = await supabase.rpc("revoke_admin", { email: normalized });
+			if (error) throw error;
+		},
+		onSuccess: () => {
+			setSuccess("Administrador removido com sucesso!");
+			queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+		},
+		onError: (err: Error) => {
+			setError(err.message);
+		},
+	});
 
 	const resetForm = () => {
 		setFormData({
@@ -296,6 +352,81 @@ export function AdminDashboard({ audiobooks, onUpdate }: AdminDashboardProps) {
 					</DialogContent>
 				</Dialog>
 			</div>
+
+			{isRootAdmin && (
+				<Card className="border-indigo-200 bg-white/80 backdrop-blur-sm shadow-lg">
+					<CardHeader>
+						<CardTitle className="bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">Administradores</CardTitle>
+						<CardDescription>
+							Apenas o administrador principal ({rootAdminEmail || "root"}) pode conceder ou remover acesso.
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<div className="grid sm:grid-cols-[1fr_auto] gap-2 items-end">
+							<div className="space-y-2">
+								<Label htmlFor="admin-email">Email do novo administrador</Label>
+								<Input
+									id="admin-email"
+									type="email"
+									placeholder="email@dominio.com"
+									value={adminEmail}
+									onChange={(e) => setAdminEmail(e.target.value)}
+								/>
+							</div>
+							<Button
+								type="button"
+								className="w-full sm:w-auto"
+								disabled={grantAdminMutation.isPending}
+								onClick={() => {
+									setError("");
+									setSuccess("");
+									grantAdminMutation.mutate(adminEmail);
+								}}
+							>
+								Adicionar Admin
+							</Button>
+						</div>
+
+						{adminUsersError && (
+							<Alert variant="destructive">
+								<AlertDescription>
+									Não foi possível carregar a lista de admins. Verifique se as funções/tabelas de admin foram aplicadas no Supabase.
+								</AlertDescription>
+							</Alert>
+						)}
+
+						{adminUsers.length > 0 && (
+							<div className="space-y-2">
+								<div className="text-sm font-medium text-gray-800">Admins permitidos</div>
+								<div className="space-y-2">
+									{adminUsers.map((u) => {
+										const email = String(u.email || "");
+										const isRoot = rootAdminEmail && email.toLowerCase() === rootAdminEmail.toLowerCase();
+										return (
+											<div key={email} className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 bg-white/70 px-3 py-2">
+												<div className="text-sm text-gray-800 truncate">{email}</div>
+												<Button
+													type="button"
+													variant="outline"
+													className="text-red-600 hover:text-red-700 hover:bg-red-50"
+													disabled={revokeAdminMutation.isPending || isRoot}
+													onClick={() => {
+														setError("");
+														setSuccess("");
+														revokeAdminMutation.mutate(email);
+													}}
+												>
+													Remover
+												</Button>
+											</div>
+										);
+									})}
+								</div>
+							</div>
+						)}
+					</CardContent>
+				</Card>
+			)}
 
 			{success && (
 				<Alert>

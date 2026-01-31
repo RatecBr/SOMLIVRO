@@ -33,7 +33,7 @@ Implementação:
 ### Admin (`/admin`)
 
 - Usa o mesmo app base, mas inicia em modo Admin.
-- O dashboard só abre para emails autorizados (VITE_ADMIN_EMAILS).
+- O dashboard só abre para administradores (admin principal + admins concedidos).
 
 Implementação:
 - [AdminDashboard.tsx](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/src/components/AdminDashboard.tsx)
@@ -68,4 +68,3 @@ TanStack Router por arquivo:
 - Logo principal (header e assets): [app_icon.svg](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/public/app_icon.svg)
 - Favicon (ícone recortado): [favicon.svg](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/public/favicon.svg)
 - Referências no HTML: [index.html](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/index.html)
-

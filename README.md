@@ -9,7 +9,7 @@ O SOMLIVRO é um sistema com foco em **usuário consumidor**:
 - Biblioteca com catálogo e player
 - Visitantes (sem login) veem apenas uma **prévia limitada** (ex.: 2 títulos)
 - Usuários autenticados desbloqueiam o catálogo completo
-- Admin é identificado por allowlist de emails (variável de ambiente)
+- Admin é controlado por permissões: um admin principal e admins concedidos por ele
 
 ## Stack
 
@@ -32,9 +32,6 @@ Base:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 - `TENANT_ID` (padrão: `SOMLIVRO`)
-
-Admin (allowlist):
-- `VITE_ADMIN_EMAILS` (lista separada por vírgula/espaço)
 
 Veja detalhes em:
 - [CONFIGURACAO.md](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/docs/CONFIGURACAO.md)
@@ -61,4 +58,4 @@ Documentação:
 
 - Deploy/push/publicação devem ser feitos apenas com autorização explícita do responsável.
 - A limitação “visitante vê 2 títulos” é uma regra de UI/UX; se precisar de bloqueio real, implemente RLS/policies no Supabase.
-
+- Confirmação de cadastro por email exige configuração correta de URLs no Supabase e rewrite de rotas SPA no host (Vercel/Pages).

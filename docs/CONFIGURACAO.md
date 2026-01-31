@@ -13,15 +13,34 @@ Use o arquivo [.env.example](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOML
 
 Sem essas variáveis no deploy, o app entra em modo “Supabase não configurado” e orienta o usuário.
 
+## Supabase Auth (URLs)
+
+Para confirmação de cadastro e redirecionamento correto:
+
+- Em **Supabase → Authentication → URL Configuration**
+  - `Site URL`: URL principal do sistema (ex.: `https://www.somlivro.com/`)
+  - `Redirect URLs`: incluir a rota de login e/ou wildcard, por exemplo:
+    - `https://www.somlivro.com/entrar`
+    - `https://www.somlivro.com/*`
+    - `http://localhost:3000/*` (dev)
+
+Observação:
+- O cadastro do usuário comum envia `emailRedirectTo` para `/entrar` automaticamente (para cair na tela de login após confirmar).
+
 ### Admin (allowlist)
 
-- `VITE_ADMIN_EMAILS`
-  - Lista de emails separados por vírgula e/ou espaço.
-  - Ex.: `admin@dominio.com, outro@dominio.com`
+## Admin (permissões)
 
-Regras:
-- O painel `/admin` só abre o dashboard se o usuário autenticado estiver nessa lista.
-- Um usuário fora da allowlist verá “Acesso negado” ao tentar acessar o Admin.
+Regras do sistema:
+- O administrador principal é fixo: `marx.jane.menezes@gmail.com`.
+- Apenas esse usuário pode conceder/remover acesso de Admin para outros emails.
+- Outros admins são cadastrados no banco (tabela `admin_users`).
+
+Para habilitar esse controle no Supabase, aplique os scripts:
+- [schema.sql](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/supabase/schema.sql)
+- [storage.sql](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/supabase/storage.sql)
+
+Após aplicado, a gestão de admins fica disponível no painel administrativo quando logado como o administrador principal.
 
 ### Outras
 
@@ -50,4 +69,3 @@ O repositório inclui SQLs de referência:
 - Para segurança completa, recomenda-se reforçar o back-end com RLS/policies no Supabase:
   - restringir escrita na tabela/bucket apenas para admins
   - manter leitura pública ou apenas para autenticados, conforme a regra de negócio
-

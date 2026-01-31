@@ -6,12 +6,18 @@ Este projeto pode ser publicado em:
 - GitHub Pages (via GitHub Actions)
 - Vercel (recomendado para SPA/PWA, se aplicável)
 
+### Rotas SPA (importante)
+
+Como o sistema é uma SPA, URLs diretas como `/entrar` precisam ser reescritas para servir o `index.html`.
+
+- No Vercel, isso é feito via [vercel.json](file:///d:/Dropbox/DOWNLOAD/RATec/_APLICATIVOS/SOMLIVRO/vercel.json).
+- No GitHub Pages, o workflow já cria `dist/404.html` como fallback para SPA.
+
 ### Variáveis no deploy
 
 No provedor (GitHub Actions/Vercel), configurar:
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
-- `VITE_ADMIN_EMAILS` (emails de admin permitidos)
 
 Sem as variáveis do Supabase, o sistema entra em modo “Supabase não configurado”.
 
@@ -30,10 +36,38 @@ O que checar:
 
 ### “Acesso negado” no Admin
 
-O usuário autenticou, mas o email não está liberado em `VITE_ADMIN_EMAILS`.
+O usuário autenticou, mas não tem permissão de admin.
+
+Regras:
+- Admin principal: `marx.jane.menezes@gmail.com`
+- Outros admins: concedidos pelo admin principal no painel
+
+### Confirmação de cadastro cai em 404
+
+Sintoma:
+- Ao confirmar o email, abre uma URL como `/entrar#access_token=...` e aparece 404.
+
+Causa:
+- O provedor não está reescrevendo rotas SPA para `index.html`.
+
+Solução:
+- Garantir `vercel.json` no deploy Vercel e/ou fallback de SPA no host.
+- No Supabase Auth, garantir que Redirect URLs incluem a rota de login (ex.: `/entrar`).
+
+### “email rate limit exceeded” (429)
+
+Sintoma:
+- Ao criar conta, aparece mensagem de limite de email e o console mostra 429.
+
+Causa:
+- Rate limit temporário do provedor de envio de emails do Supabase (muitas tentativas em pouco tempo).
+
+Mitigações:
+- Aguardar e tentar mais tarde.
+- Evitar múltiplos envios/reenvios em sequência.
+- Em produção, configurar um SMTP próprio para melhorar entregabilidade e reduzir limites.
 
 ## PWA (decisão futura)
 
 O sistema já inclui `manifest.json`, mas para ser PWA completo ainda precisa de Service Worker e ícones PNG.
 O checklist técnico está registrado para implementação quando for decidido.
-

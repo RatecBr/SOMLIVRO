@@ -17,7 +17,6 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
-	const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 	const [isPending, setIsPending] = useState(false);
 	const [supabaseUrl, setSupabaseUrl] = useState("");
 	const [supabaseKey, setSupabaseKey] = useState("");
@@ -40,23 +39,6 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 
 		setIsPending(true);
 		(async () => {
-			if (isCreatingAccount) {
-				const { data, error } = await supabase.auth.signUp({
-					email,
-					password,
-				});
-				if (error) {
-					throw error;
-				}
-				if (data.session) {
-					onLogin();
-				} else {
-					setSuccess("Conta criada. Se necessário, confirme o email para entrar.");
-					setIsCreatingAccount(false);
-				}
-				return;
-			}
-
 			const { data, error } = await supabase.auth.signInWithPassword({
 				email,
 				password,
@@ -88,12 +70,10 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 						</div>
 					</div>
 					<CardTitle className="text-xl sm:text-2xl bg-gradient-to-r from-violet-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent">
-						{isCreatingAccount ? "Criar Novo Admin" : "Login Administrativo"}
+						Login Administrativo
 					</CardTitle>
 					<CardDescription className="text-sm">
-						{isCreatingAccount
-							? "Crie uma conta para acesso administrativo (exige permissão)."
-							: "Informe suas credenciais para acessar o painel. O email precisa estar em VITE_ADMIN_EMAILS."}
+						Informe suas credenciais para acessar o painel.
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="px-4 sm:px-6">
@@ -163,7 +143,7 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 								placeholder="Digite a senha"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								autoComplete={isCreatingAccount ? "new-password" : "current-password"}
+								autoComplete="current-password"
 								className="h-11 sm:h-10 text-base sm:text-sm touch-manipulation"
 							/>
 						</div>
@@ -184,21 +164,7 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
 						>
 							{isPending
 								? "Processando..."
-								: isCreatingAccount
-								? "Criar Conta"
 								: "Entrar"}
-						</Button>
-						<Button
-							type="button"
-							variant="ghost"
-							className="w-full h-10 text-sm touch-manipulation"
-							onClick={() => {
-								setIsCreatingAccount(!isCreatingAccount);
-								setError("");
-								setSuccess("");
-							}}
-						>
-							{isCreatingAccount ? "Voltar ao Login" : "Criar Nova Conta Admin"}
 						</Button>
 					</form>
 				</CardContent>
