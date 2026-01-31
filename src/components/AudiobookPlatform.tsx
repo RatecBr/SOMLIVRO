@@ -16,12 +16,14 @@ export function AudiobookPlatform() {
 	const [isAdminMode, setIsAdminMode] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const queryClient = useQueryClient();
-	const { session } = useSupabaseSession();
+	const { session, isReady, configError } = useSupabaseSession();
 	const isAdminAuthenticated = Boolean(session);
+	const isSupabaseConfigured = Boolean(getSupabaseClient());
 
 	// Fetch all audiobooks
 	const { data: audiobooks = [], isLoading, error } = useQuery({
 		queryKey: ["audiobooks"],
+		enabled: isSupabaseConfigured,
 		queryFn: async () => {
 			return await listAudiobooks();
 		},
@@ -46,6 +48,28 @@ export function AudiobookPlatform() {
 	const handleAudiobookUpdate = () => {
 		queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
 	};
+
+	if (isReady && !isSupabaseConfigured && !isAdminMode) {
+		return (
+			<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-violet-50 via-rose-50 to-amber-50 p-4">
+				<div className="max-w-lg w-full bg-white/80 backdrop-blur-md border border-gray-200/50 shadow-xl rounded-xl p-5">
+					<div className="text-lg font-semibold text-gray-900">Supabase não configurado</div>
+					<div className="text-sm text-gray-700 mt-2">
+						{configError || "Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no deploy, ou configure pelo Admin."}
+					</div>
+					<div className="mt-4">
+						<Button
+							variant="default"
+							onClick={() => setIsAdminMode(true)}
+						>
+							<Settings className="w-4 h-4 mr-2" />
+							Configurar no Admin
+						</Button>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	if (isLoading) {
 		return (

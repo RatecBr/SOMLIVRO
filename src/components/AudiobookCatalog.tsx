@@ -80,7 +80,7 @@ export function AudiobookCatalog({ audiobooks, onSelect, selectedId }: Audiobook
 	return (
 		<div>
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-				<h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Catálogo de Audiobooks</h2>
+				<h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-700 to-fuchsia-600 bg-clip-text text-transparent">Biblioteca</h2>
 				<button
 					onClick={() => setShowFilters(!showFilters)}
 					className={cn(
